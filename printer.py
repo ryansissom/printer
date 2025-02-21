@@ -1,7 +1,6 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
 import requests
-import cups
 from label_generator import (create_1x2_product_label, create_2x4_shelf_label, create_1x3_product_label, generate_codes)
 import pandas as pd
 import os
@@ -134,7 +133,8 @@ def generate_labels():
         # Send the ZPL to the selected printer
         selected_printer = printer_combo.get()
         if selected_printer and zpl_content:
-            send_zpl_to_printer(zpl_content)
+            for _ in range(num_copies):
+                send_zpl_to_printer(zpl_content)
             print(zpl_content)
         else:
             print("No printer selected or ZPL content is empty.")
