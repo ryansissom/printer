@@ -44,7 +44,7 @@ def send_zpl_file_to_printer(zpl_data, printer_name):
 # Example usage
 zpl_data = "^XA^FO50,50^A0N,50,50^FDHello, ZPL!^FS^XZ"
 printer_name = "Zebra Technologies ZTC ZD421-203dpi ZPL"
-send_zpl_file_to_printer(zpl_data, printer_name)
+# send_zpl_file_to_printer(zpl_data, printer_name)
 
 
 

@@ -44,21 +44,21 @@ def get_printers():
         return []
 
 # Send ZPL Content via CUPS to Print
-def send_zpl_to_printer(zpl_content):
-    """Send ZPL content to the default Zebra printer."""
+def send_zpl_to_printer(zpl_content, printer_name):
+    """Send ZPL content to the specified Zebra printer."""
     try:
         z = zebra.Zebra()
         printers = z.getqueues()
-        if not printers:
-            print("No Zebra printers found.")
+        if printer_name not in printers:
+            print(f"Printer {printer_name} not found.")
             return
         
-        # Set the default printer
-        z.setqueue(printers[0])
+        # Set the specified printer
+        z.setqueue(printer_name)
         
         # Send the ZPL content to the printer
         z.output(zpl_content)
-        print(f"ZPL sent to printer: {printers[0]}")
+        print(f"ZPL sent to printer: {printer_name}")
     except Exception as e:
         print(f"Failed to send to printer: {e}")
 
@@ -134,8 +134,9 @@ def generate_labels():
         selected_printer = printer_combo.get()
         if selected_printer and zpl_content:
             for _ in range(num_copies):
-                send_zpl_to_printer(zpl_content)
+                send_zpl_to_printer(zpl_content, selected_printer)
             print(zpl_content)
+            print(selected_printer)
         else:
             print("No printer selected or ZPL content is empty.")
     finally:
