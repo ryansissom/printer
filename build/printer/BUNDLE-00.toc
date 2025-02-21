@@ -1,0 +1,3 @@
+([('printer',
+   '/Users/ryansissom/Desktop/VSCode/dumbproject/dist/printer',
+   'EXECUTABLE')],)
