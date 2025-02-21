@@ -7,6 +7,7 @@ import os
 import sys
 import zebra
 import subprocess
+from test import align_test
 
 # Handle paths dynamically based on how the script is run
 if hasattr(sys, '_MEIPASS'):  # When running as .exe
@@ -301,6 +302,9 @@ po_entry.pack(pady=10, ipady=5)
 
 populate_button = tk.Button(left_frame, text="Auto-Fill Fields", command=populate_fields, font=LARGE_FONT)
 populate_button.pack(pady=10)
+
+align_button = tk.Button(left_frame, text="Align Printer", command=align_test, font=LARGE_FONT)
+align_button.pack(pady=10)
 
 # Right Frame Content
 provider_label = tk.Label(right_frame, text="Provider:", font=LARGE_FONT)
