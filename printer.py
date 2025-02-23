@@ -7,7 +7,7 @@ import os
 import sys
 import zebra
 import subprocess
-from test import align_test
+from test import align_test_1x2, align_test_1x3, align_test_2x4
 
 # Handle paths dynamically based on how the script is run
 if hasattr(sys, '_MEIPASS'):  # When running as .exe
@@ -23,12 +23,6 @@ df = pd.read_csv(data_file)
 products_ids = sorted(df['Part ID'].dropna().astype(int).unique().tolist())
 branches = df['Store Name'].dropna().unique().tolist()
 
-# Define label dimensions
-LABEL_DIMENSIONS = {
-    "1x2": {"width": "50mm", "height": "25mm"},
-    "1x3": {"width": "75mm", "height": "25mm"},
-    "2x4": {"width": "100mm", "height": "50mm"}
-}
 
 def get_printers():
     """Get a list of all printers available on the system using lpstat."""
@@ -53,10 +47,8 @@ def send_zpl_to_printer(zpl_content, printer_name):
         if printer_name not in printers:
             print(f"Printer {printer_name} not found.")
             return
-        
         # Set the specified printer
         z.setqueue(printer_name)
-        
         # Send the ZPL content to the printer
         z.output(zpl_content)
         print(f"ZPL sent to printer: {printer_name}")
@@ -81,6 +73,17 @@ def convert_to_zpl(png_file):
         print(f"An error occurred: {e}")
     return None
 
+def align():
+    """Align the printer based on the selected label type."""
+    selected_label = label_var.get()
+    if selected_label == "1x2":
+        align_test_1x2()
+    elif selected_label == "1x3":
+        align_test_1x3()
+    elif selected_label == "2x4":
+        align_test_2x4()
+    else:
+        print("No label type selected.")
 
 def generate_labels():
     """Generate labels dynamically with a button click."""
@@ -303,7 +306,7 @@ po_entry.pack(pady=10, ipady=5)
 populate_button = tk.Button(left_frame, text="Auto-Fill Fields", command=populate_fields, font=LARGE_FONT)
 populate_button.pack(pady=10)
 
-align_button = tk.Button(left_frame, text="Align Printer", command=align_test, font=LARGE_FONT)
+align_button = tk.Button(left_frame, text="Align Printer", command=align, font=LARGE_FONT)
 align_button.pack(pady=10)
 
 # Right Frame Content
