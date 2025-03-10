@@ -4,6 +4,8 @@ import barcode
 from barcode.writer import ImageWriter
 from PIL import Image, ImageDraw, ImageFont
 import os
+from zebrafy import ZebrafyImage
+
 
 
 def generate_codes(qr_data, barcode_data=None):
@@ -59,7 +61,7 @@ def create_1x2_product_label(
     # Add Title
     font_title = ImageFont.truetype("Helvetica", size=int(0.1 * label_height_px))
     title_x = (label_width_px - draw.textlength(title, font=font_title)) / 2
-    draw.text((title_x, int(label_height_px * 0.02)), title, fill="black", font=font_title)
+    draw.text((title_x, int(label_height_px * 0.05)), title, fill="black", font=font_title)
 
     # Add QR Code
     qr_img = Image.open(qr_file)
@@ -139,7 +141,7 @@ def create_1x3_product_label(
     # Add Title (Top Center, Smaller Font)
     font_title = ImageFont.truetype("Helvetica", size=int(0.1 * label_height_px))
     title_x = (label_width_px - draw.textlength(title, font=font_title)) / 2
-    draw.text((title_x, int(label_height_px * 0.02)), title, fill="black", font=font_title)
+    draw.text((title_x, int(label_height_px * 0.05)), title, fill="black", font=font_title)
 
     # Add QR Code (Larger Size)
     qr_img = Image.open(qr_file)

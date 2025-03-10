@@ -8,6 +8,7 @@ import sys
 import zebra
 import subprocess
 from test import align_test_1x2, align_test_1x3, align_test_2x4
+from zebrafy import ZebrafyImage
 
 
 # Handle paths dynamically based on how the script is run
@@ -21,7 +22,7 @@ data_file = os.path.join(base_path, "data.csv")
 
 # Load the CSV file
 df = pd.read_csv(data_file)
-products_ids = sorted(df['Part ID'].dropna().astype(int).unique().tolist())
+products_ids = sorted(df['Part ID'].dropna().unique().tolist())
 manufacturer_ids = sorted(df['Part Number'].dropna().unique().tolist())
 branches = df['Store Name'].dropna().unique().tolist()
 
@@ -65,22 +66,28 @@ def send_zpl_to_printer(zpl_content, printer_name):
         print(f"Failed to send to printer: {e}")
 
 def convert_to_zpl(png_file):
-    """Send the PNG to the Labelary API and save the ZPL output."""
-    url = "http://api.labelary.com/v1/graphics"
-    try:
-        with open(png_file, 'rb') as file:
-            files = {'file': file}
-            response = requests.post(url, files=files)
+    with open(png_file, "rb") as image:
+        zpl_content = ZebrafyImage(
+            image.read(),
+            invert=True,
+        ).to_zpl()
+    return zpl_content
+    # url = "http://api.labelary.com/v1/graphics"
+    # try:
+    #     with open(png_file, 'rb') as file:
+    #         files = {'file': file}
+    #         response = requests.post(url, files=files)
 
-        if response.status_code == 200:
-            zpl_content = response.text
-            print(f"ZPL Content:\n{zpl_content}")  # Print the ZPL content for debugging
-            return zpl_content
-        else:
-            print("Error:", response.status_code, response.text)
-    except Exception as e:
-        print(f"An error occurred: {e}")
-    return None
+    #     if response.status_code == 200:
+    #         zpl_content = response.text
+    #         print(f"ZPL Content:\n{zpl_content}")  # Print the ZPL content for debugging
+    #         return zpl_content
+    #     else:
+    #         print("Error:", response.status_code, response.text)
+    # except Exception as e:
+    #     print(f"An error occurred: {e}")
+    # return None
+    
 
 def align():
     """Align the printer based on the selected label type."""
@@ -170,8 +177,11 @@ def filter_autocomplete(event):
         manufacturer_combo['values'] = manufacturer_ids
     else:
         # Filter options that start with the typed text
-        filtered = [item for item in manufacturer_ids if str(item).startswith(typed_text)]
+        filtered = [item for item in manufacturer_ids if str(item).lower().startswith(typed_text.lower())]
         manufacturer_combo['values'] = filtered
+
+    # Update the dropdown menu
+    manufacturer_combo.update_idletasks()
 
 def populate_fields():
     """Populate Product Number, Description, and Provider based on Manufacturer Number."""
